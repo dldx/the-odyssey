@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BFI IMAX - The Odyssey Seat Finder</title>
+  <title>IMAX - The Odyssey Seat Finder</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.yellow.min.css">
   <style>
     body { padding-bottom: 2rem; }
@@ -35,11 +35,27 @@
     .stat { text-align: center; }
     .stat .num { font-size: 2rem; font-weight: bold; }
     .stat .label { font-size: 0.8rem; color: var(--pico-muted-color); }
+
+    /* Venue tabs */
+    .venue-tabs { display: flex; gap: 0; margin: 1rem 0; border-bottom: 2px solid var(--pico-muted-border-color, #ccc); }
+    .venue-tab { padding: 0.75rem 1.5rem; cursor: pointer; border: none; background: none; font-size: 1.1rem; font-weight: bold; color: var(--pico-muted-color); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .venue-tab.active { color: var(--pico-primary, #fdd835); border-bottom-color: var(--pico-primary, #fdd835); }
+    .venue-tab:hover { color: var(--pico-primary-hover, #fbc02d); }
+
+    .block-filter-wrap { transition: opacity 0.2s; }
+    .block-filter-wrap.disabled { opacity: 0.35; pointer-events: none; }
+
+    .book-link { display: inline-block; margin-top: 4px; font-size: 0.8rem; }
   </style>
 </head>
 <body>
   <main class="container">
-    <h1>BFI IMAX &mdash; The Odyssey (70mm IMAX)</h1>
+    <h1>The Odyssey &mdash; IMAX Seat Finder</h1>
+
+    <div class="venue-tabs">
+      <button class="venue-tab active" data-venue="bfi">BFI IMAX (70mm)</button>
+      <button class="venue-tab" data-venue="sm">Science Museum IMAX</button>
+    </div>
 
     <div class="stats" id="stats"></div>
 
@@ -51,7 +67,7 @@
         </div>
         <div>
           <label for="filter-time-min">Time of day
-            <small id="time-range-label">00:00 – 23:59</small>
+            <small id="time-range-label">00:00 &ndash; 23:59</small>
           </label>
           <div class="range-container">
             <input type="range" id="filter-time-min" min="0" max="23" value="0">
@@ -66,7 +82,7 @@
             <option value="soldout">Sold out only</option>
           </select>
         </div>
-        <div>
+        <div class="block-filter-wrap" id="block-filter-wrap">
           <label for="filter-block">Block</label>
           <select id="filter-block" style="margin:0;">
             <option value="">Any block</option>
@@ -79,7 +95,7 @@
       <div class="grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 1rem; align-items: end;">
         <div>
           <label for="filter-row-min">Row
-            <small id="row-range-label">A – Q</small>
+            <small id="row-range-label">A &ndash; Q</small>
           </label>
           <div class="range-container">
             <input type="range" id="filter-row-min" min="0" max="14" value="0">
@@ -105,30 +121,64 @@
   </main>
 
   <script>
-    let allScreenings = [];
-    let analyzedScreenings = {};
+    // ---- Venue config ----
+    const VENUES = {
+      bfi: {
+        label: 'BFI IMAX (70mm)',
+        screeningsFile: 'all-screenings.json',
+        analyzedFile: 'analyzed-seats.json',
+        seatMapDir: 'seat-maps',
+        rows: ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q'],
+        hasBlocks: true,
+        hasBookLink: false,
+        // BFI: start = "Friday 17 July 2026 00:01"
+        parseStart(startStr) {
+          const match = startStr.match(/^(\w+)\s+(\d+)\s+(\w+)\s+(\d+)\s+(\d{2}):(\d{2})$/);
+          if (!match) return null;
+          const [, dow, day, monthName, year, hh, mm] = match;
+          const months = {January:'01',February:'02',March:'03',April:'04',May:'05',June:'06',July:'07',August:'08',September:'09',October:'10',November:'11',December:'12'};
+          const month = months[monthName] || '01';
+          const dateStr = `${year}-${month}-${day.padStart(2,'0')}`;
+          const timeStr = `${hh}:${mm}`;
+          return { date: dateStr, time: timeStr, hour: parseInt(hh), datetime: `${dateStr} ${timeStr}`, sortKey: `${dateStr}T${timeStr}` };
+        },
+        // BFI analyzed by_row: { "B": { count, blocks, seats: [{x,y,block}] } }
+        getRowCount(info) { return info.count || 0; },
+        getRowBlocks(info) { return info.blocks || []; },
+        getTotalAvailable(screening) { return screening.analyzed?.total_available || 0; },
+        seatBlock(seat) { return seat.block || ''; },
+        seatNum(seat) { return ''; },
+        seatKey(row, seat, idx) { return `${row}-${seat.x}-${seat.y}`; },
+      },
+      sm: {
+        label: 'Science Museum IMAX',
+        screeningsFile: 'all-screenings-sm.json',
+        analyzedFile: 'analyzed-seats-sm.json',
+        seatMapDir: 'seat-maps-sm',
+        rows: ['A','B','C','D','E','F','G','H','J','K','L','M','N'],
+        hasBlocks: false,
+        hasBookLink: true,
+        // SM: date = "2026-07-17", time = "10:30"
+        parseStart(s) { return null; },  // not used for SM
+        parseDate(dateStr, timeStr) {
+          const hh = timeStr.split(':')[0];
+          return { date: dateStr, time: timeStr, hour: parseInt(hh), datetime: `${dateStr} ${timeStr}`, sortKey: `${dateStr}T${timeStr}` };
+        },
+        // SM analyzed by_row: { "A": { total, available, seats: [{seat_id, number, x, y, available, price, icon}] } }
+        getRowCount(info) { return info.available || 0; },
+        getRowBlocks(info) { return []; },
+        getTotalAvailable(screening) { return screening.analyzed?.available_seats || 0; },
+        seatBlock(seat) { return ''; },
+        seatNum(seat) { return seat.number || ''; },
+        seatKey(row, seat, idx) { return `${row}-${seat.number || idx}`; },
+      },
+    };
+
+    let currentVenue = 'bfi';
+    let venueData = {};  // { bfi: {screenings, analyzed}, sm: {...} }
     let filtered = [];
 
-    const ROWS = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q'];
-
-    // Parse "Thursday 30 July 2026 13:00" -> {date, time, datetime, hour}
-    function parseStart(startStr) {
-      // e.g. "Friday 17 July 2026 00:01"
-      const match = startStr.match(/^(\w+)\s+(\d+)\s+(\w+)\s+(\d+)\s+(\d{2}):(\d{2})$/);
-      if (!match) return null;
-      const [, dow, day, monthName, year, hh, mm] = match;
-      const months = {January:'01',February:'02',March:'03',April:'04',May:'05',June:'06',July:'07',August:'08',September:'09',October:'10',November:'11',December:'12'};
-      const month = months[monthName] || '01';
-      const dateStr = `${year}-${month}-${day.padStart(2,'0')}`;
-      const timeStr = `${hh}:${mm}`;
-      return {
-        date: dateStr,
-        time: timeStr,
-        hour: parseInt(hh),
-        datetime: `${dateStr} ${timeStr}`,
-        sortKey: `${dateStr}T${timeStr}`,
-      };
-    }
+    function currentConfig() { return VENUES[currentVenue]; }
 
     function timeCategory(hour) {
       if (hour < 12) return 'morning';
@@ -142,64 +192,139 @@
       return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
-    function fmtTime(timeStr) {
-      return timeStr;
+    function fmtTime(timeStr) { return timeStr; }
+
+    // ---- Data loading ----
+    async function loadVenueData(venueKey) {
+      const cfg = VENUES[venueKey];
+      const [screeningsRes, analyzedRes] = await Promise.all([
+        fetch(cfg.screeningsFile),
+        fetch(cfg.analyzedFile),
+      ]);
+      const screenings = await screeningsRes.json();
+      const analyzedData = await analyzedRes.json();
+      const analyzedScreenings = analyzedData.screenings || {};
+
+      // Normalize: produce {parsed, sold_out, screenshot, analyzed, href} for each
+      const normalized = screenings.map(s => {
+        let parsed, soldOut, screenshot, analyzed, href;
+
+        if (venueKey === 'bfi') {
+          parsed = cfg.parseStart(s.start);
+          soldOut = s.sold_out;
+          screenshot = s.screenshot;
+          href = null;
+          if (screenshot) {
+            const key = screenshot.replace('.png', '');
+            analyzed = analyzedScreenings[key] || null;
+          }
+        } else {
+          parsed = cfg.parseDate(s.date, s.time);
+          soldOut = s.sold_out;
+          screenshot = null;
+          href = s.href;
+          // SM: analyzed key is "2026-07-21_14-30"
+          const key = `${s.date.replace(/-/g, '-')}_${s.time.replace(':', '-')}`;
+          analyzed = analyzedScreenings[key] || null;
+          if (analyzed) screenshot = analyzed.screenshot || null;
+        }
+
+        return { raw: s, parsed, sold_out: soldOut, screenshot, analyzed, href };
+      });
+
+      // Filter out screenings with no parsed date
+      const valid = normalized.filter(s => s.parsed);
+
+      // Sort by datetime
+      valid.sort((a, b) => (a.parsed?.sortKey || '').localeCompare(b.parsed?.sortKey || ''));
+
+      return { screenings: valid, analyzed: analyzedScreenings };
     }
 
     async function loadData() {
-      const [screeningsRes, analyzedRes] = await Promise.all([
-        fetch('all-screenings.json'),
-        fetch('analyzed-seats.json'),
-      ]);
-      allScreenings = await screeningsRes.json();
-      const analyzedData = await analyzedRes.json();
-      analyzedScreenings = analyzedData.screenings || {};
+      try {
+        const [bfiData, smData] = await Promise.all([
+          loadVenueData('bfi').catch(() => ({ screenings: [], analyzed: {} })),
+          loadVenueData('sm').catch(() => ({ screenings: [], analyzed: {} })),
+        ]);
+        venueData = { bfi: bfiData, sm: smData };
+        document.getElementById('loading').style.display = 'none';
+        switchVenue('bfi');
+      } catch (err) {
+        document.getElementById('loading').textContent = 'Error loading data: ' + err.message;
+        console.error(err);
+      }
+    }
 
-      // Merge parsed dates
-      allScreenings.forEach(s => {
-        s.parsed = parseStart(s.start);
-        // Match with analyzed screening by screenshot filename
-        if (s.screenshot) {
-          const key = s.screenshot.replace('.png', '');
-          s.analyzed = analyzedScreenings[key] || null;
-        } else {
-          s.analyzed = null;
-        }
+    // ---- Venue switching ----
+    function switchVenue(venueKey) {
+      currentVenue = venueKey;
+      document.querySelectorAll('.venue-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.venue === venueKey);
       });
 
-      // Sort by datetime
-      allScreenings.sort((a, b) => (a.parsed?.sortKey || '').localeCompare(b.parsed?.sortKey || ''));
+      const cfg = currentConfig();
 
+      // Update row range sliders
+      const rowMin = document.getElementById('filter-row-min');
+      const rowMax = document.getElementById('filter-row-max');
+      rowMin.max = cfg.rows.length - 1;
+      rowMax.max = cfg.rows.length - 1;
+      rowMin.value = 0;
+      rowMax.value = cfg.rows.length - 1;
+
+      // Toggle block filter visibility
+      const blockWrap = document.getElementById('block-filter-wrap');
+      blockWrap.classList.toggle('disabled', !cfg.hasBlocks);
+      if (!cfg.hasBlocks) document.getElementById('filter-block').value = '';
+
+      // Update heading
+      document.querySelector('h1').textContent = `${cfg.label} \u2014 The Odyssey`;
+
+      updateRowRangeLabel();
       initFilters();
       applyFilters();
     }
 
+    // ---- Filters ----
+    function getAllScreenings() {
+      return venueData[currentVenue]?.screenings || [];
+    }
+
     function initFilters() {
       const dateSelect = document.getElementById('filter-date');
-      const dates = [...new Set(allScreenings.map(s => s.parsed?.date).filter(Boolean))].sort();
+      const currentValue = dateSelect.value;
+      dateSelect.innerHTML = '<option value="">All dates</option>';
+      const dates = [...new Set(getAllScreenings().map(s => s.parsed?.date).filter(Boolean))].sort();
       dates.forEach(d => {
         const opt = document.createElement('option');
         opt.value = d;
         opt.textContent = fmtDate(d);
         dateSelect.appendChild(opt);
       });
+      dateSelect.value = currentValue;
 
       ['filter-date','filter-availability','filter-block','filter-min-seats','filter-screenshot'].forEach(id => {
-        document.getElementById(id).addEventListener('change', applyFilters);
-        document.getElementById(id).addEventListener('input', applyFilters);
+        const el = document.getElementById(id);
+        el.removeEventListener('change', applyFilters);
+        el.removeEventListener('input', applyFilters);
+        el.addEventListener('change', applyFilters);
+        el.addEventListener('input', applyFilters);
       });
 
       ['filter-time-min','filter-time-max'].forEach(id => {
         const el = document.getElementById(id);
+        el.removeEventListener('input', applyFilters);
         el.addEventListener('input', () => { updateTimeRangeLabel(); applyFilters(); });
       });
 
       ['filter-row-min','filter-row-max'].forEach(id => {
         const el = document.getElementById(id);
+        el.removeEventListener('input', applyFilters);
         el.addEventListener('input', () => { updateRowRangeLabel(); applyFilters(); });
       });
 
-      document.getElementById('reset-filters').addEventListener('click', () => {
+      document.getElementById('reset-filters').onclick = () => {
         document.getElementById('filter-date').value = '';
         document.getElementById('filter-availability').value = 'available';
         document.getElementById('filter-block').value = '';
@@ -209,44 +334,49 @@
         document.getElementById('filter-time-max').value = 23;
         updateTimeRangeLabel();
         document.getElementById('filter-row-min').value = 0;
-        document.getElementById('filter-row-max').value = 14;
+        document.getElementById('filter-row-max').value = currentConfig().rows.length - 1;
         updateRowRangeLabel();
         applyFilters();
-      });
+      };
     }
 
     function updateTimeRangeLabel() {
       const min = parseInt(document.getElementById('filter-time-min').value);
       const max = parseInt(document.getElementById('filter-time-max').value);
       document.getElementById('time-range-label').textContent =
-        `${String(min).padStart(2,'0')}:00 – ${String(max).padStart(2,'0')}:59`;
+        `${String(min).padStart(2,'0')}:00 \u2013 ${String(max).padStart(2,'0')}:59`;
     }
 
     function updateRowRangeLabel() {
+      const cfg = currentConfig();
       const min = parseInt(document.getElementById('filter-row-min').value);
       const max = parseInt(document.getElementById('filter-row-max').value);
       document.getElementById('row-range-label').textContent =
-        `${ROWS[min]} – ${ROWS[max]}`;
+        `${cfg.rows[min]} \u2013 ${cfg.rows[max]}`;
     }
 
     function rowInScope(row) {
+      const cfg = currentConfig();
       const min = parseInt(document.getElementById('filter-row-min').value);
       const max = parseInt(document.getElementById('filter-row-max').value);
-      const idx = ROWS.indexOf(row);
+      const idx = cfg.rows.indexOf(row);
       return idx >= min && idx <= max;
     }
 
     function applyFilters() {
+      const cfg = currentConfig();
       const fDate = document.getElementById('filter-date').value;
       const fTimeMin = parseInt(document.getElementById('filter-time-min').value);
       const fTimeMax = parseInt(document.getElementById('filter-time-max').value);
       const fAvail = document.getElementById('filter-availability').value;
       const fBlock = document.getElementById('filter-block').value;
-      const fRowMin = parseInt(document.getElementById('filter-row-min').value);
-      const fRowMax = parseInt(document.getElementById('filter-row-max').value);
-      const rowRangeActive = fRowMin > 0 || fRowMax < 14;
+      const rowMax = parseInt(document.getElementById('filter-row-max').value);
+      const rowMin = parseInt(document.getElementById('filter-row-min').value);
+      const rowRangeActive = rowMin > 0 || rowMax < cfg.rows.length - 1;
       const fMinSeats = parseInt(document.getElementById('filter-min-seats').value) || 0;
       const fScreenshot = document.getElementById('filter-screenshot').checked;
+
+      const allScreenings = getAllScreenings();
 
       filtered = allScreenings.filter(s => {
         if (!s.parsed) return false;
@@ -257,17 +387,20 @@
         if (fScreenshot && !s.screenshot) return false;
 
         const analyzed = s.analyzed;
-        const totalAvailable = analyzed?.total_available || 0;
+        const totalAvailable = cfg.getTotalAvailable(s);
 
         // Count seats in scope (matching row range + block)
         let countInScope = totalAvailable;
-        if (rowRangeActive || fBlock) {
+        if (rowRangeActive || (fBlock && cfg.hasBlocks)) {
           countInScope = 0;
           if (analyzed?.by_row) {
             for (const [row, info] of Object.entries(analyzed.by_row)) {
               if (rowRangeActive && !rowInScope(row)) continue;
-              if (fBlock && !info.blocks.includes(fBlock)) continue;
-              countInScope += info.count;
+              if (fBlock && cfg.hasBlocks) {
+                const blocks = cfg.getRowBlocks(info);
+                if (!blocks.includes(fBlock)) continue;
+              }
+              countInScope += cfg.getRowCount(info);
             }
           }
         }
@@ -275,13 +408,11 @@
         if (fMinSeats > 0 && countInScope < fMinSeats) return false;
 
         // Must have at least one seat in the row range
-        if (rowRangeActive) {
-          if (countInScope === 0) return false;
-        }
+        if (rowRangeActive && countInScope === 0) return false;
 
         // Must have at least one seat in the selected block
-        if (fBlock && !rowRangeActive) {
-          const hasBlock = analyzed?.by_row && Object.values(analyzed.by_row).some(r => r.blocks.includes(fBlock));
+        if (fBlock && cfg.hasBlocks && !rowRangeActive) {
+          const hasBlock = analyzed?.by_row && Object.values(analyzed.by_row).some(r => cfg.getRowBlocks(r).includes(fBlock));
           if (!hasBlock) return false;
         }
 
@@ -296,7 +427,8 @@
       const total = filtered.length;
       const available = filtered.filter(s => !s.sold_out).length;
       const soldOut = filtered.filter(s => s.sold_out).length;
-      const totalSeats = filtered.reduce((sum, s) => sum + (s.analyzed?.total_available || 0), 0);
+      const cfg = currentConfig();
+      const totalSeats = filtered.reduce((sum, s) => sum + cfg.getTotalAvailable(s), 0);
 
       document.getElementById('stats').innerHTML = `
         <div class="stat"><div class="num">${total}</div><div class="label">Screenings</div></div>
@@ -305,13 +437,14 @@
         <div class="stat"><div class="num">${totalSeats}</div><div class="label">Total Seats</div></div>
       `;
 
-      document.getElementById('results-info').textContent = `Showing ${total} of ${allScreenings.length} screenings`;
+      const allCount = getAllScreenings().length;
+      document.getElementById('results-info').textContent = `Showing ${total} of ${allCount} screenings`;
     }
 
     function renderCards() {
       const container = document.getElementById('cards');
-      document.getElementById('loading').style.display = 'none';
       container.style.display = 'grid';
+      const cfg = currentConfig();
 
       if (filtered.length === 0) {
         container.innerHTML = '<p>No screenings match the current filters.</p>';
@@ -322,17 +455,22 @@
         const p = s.parsed;
         const analyzed = s.analyzed;
         const isSoldOut = s.sold_out;
-        const totalSeats = analyzed?.total_available || 0;
+        const totalSeats = cfg.getTotalAvailable(s);
 
         // Row chips
         let rowChips = '';
         if (analyzed?.by_row) {
           const rows = Object.entries(analyzed.by_row)
-            .filter(([r, info]) => info.count > 0)
+            .filter(([r, info]) => cfg.getRowCount(info) > 0)
             .sort((a, b) => a[0].localeCompare(b[0]));
           rowChips = rows.map(([r, info]) => {
-            const blocks = info.blocks.map(b => `<span class="chip ${b}">${b[0].toUpperCase()}</span>`).join('');
-            return `<span class="chip">${r}: ${info.count}</span>${blocks}`;
+            const count = cfg.getRowCount(info);
+            if (cfg.hasBlocks) {
+              const blocks = cfg.getRowBlocks(info).map(b => `<span class="chip ${b}">${b[0].toUpperCase()}</span>`).join('');
+              return `<span class="chip">${r}: ${count}</span>${blocks}`;
+            }
+            const totalInRow = info.total || count;
+            return `<span class="chip">${r}: ${count}/${totalInRow}</span>`;
           }).join(' ');
         }
 
@@ -340,20 +478,33 @@
         let seatDetail = '';
         if (analyzed?.by_row) {
           const rows = Object.entries(analyzed.by_row)
-            .filter(([r, info]) => info.count > 0)
+            .filter(([r, info]) => cfg.getRowCount(info) > 0)
             .sort((a, b) => a[0].localeCompare(b[0]));
-          const tableBody = rows.map(([r, info]) => {
-            return info.seats.map(seat =>
-              `<tr><td>${r}</td><td>${seat.block}</td><td>${seat.x}</td><td>${seat.y}</td></tr>`
-            ).join('');
-          }).join('');
+          let tableBody = '';
+          let idx = 0;
+          for (const [r, info] of rows) {
+            const seats = info.seats || [];
+            for (const seat of seats) {
+              const num = cfg.seatNum(seat);
+              const block = cfg.seatBlock(seat);
+              if (cfg.hasBlocks) {
+                tableBody += `<tr><td>${r}</td><td>${num || ''}</td><td>${block}</td><td>${seat.x}</td><td>${seat.y}</td></tr>`;
+              } else {
+                const price = seat.price ? `\u00a3${seat.price.join('\u2013')}` : '';
+                tableBody += `<tr><td>${r}</td><td>${num}</td><td>${seat.x}</td><td>${seat.y}</td><td>${price}</td></tr>`;
+              }
+            }
+          }
+          const headers = cfg.hasBlocks
+            ? '<tr><th>Row</th><th>Seat</th><th>Block</th><th>X</th><th>Y</th></tr>'
+            : '<tr><th>Row</th><th>Seat</th><th>X</th><th>Y</th><th>Price</th></tr>';
           if (tableBody) {
             seatDetail = `
               <details>
                 <summary>Seat positions (${totalSeats})</summary>
                 <div class="seat-list">
                   <table>
-                    <thead><tr><th>Row</th><th>Block</th><th>X</th><th>Y</th></tr></thead>
+                    <thead>${headers}</thead>
                     <tbody>${tableBody}</tbody>
                   </table>
                 </div>
@@ -362,8 +513,12 @@
         }
 
         const imgHtml = s.screenshot
-          ? `<img class="seat-map" src="seat-maps/${s.screenshot}" alt="Seat map for ${p.datetime}" loading="lazy">`
-          : '<p><em>No seat map available</em></p>';
+          ? `<img class="seat-map" src="${cfg.seatMapDir}/${s.screenshot}" alt="Seat map for ${p.datetime}" loading="lazy">`
+          : (isSoldOut ? '' : '<p><em>No seat map available</em></p>');
+
+        const bookLink = (cfg.hasBookLink && s.href && !isSoldOut)
+          ? `<a class="book-link" href="${s.href}" target="_blank" rel="noopener">Book on Science Museum &nearr;</a>`
+          : '';
 
         return `
           <article class="screening-card ${isSoldOut ? 'sold-out' : ''}">
@@ -378,14 +533,17 @@
             ${rowChips ? `<div class="row-chips">${rowChips}</div>` : ''}
             ${imgHtml}
             ${seatDetail}
+            ${bookLink}
           </article>`;
       }).join('');
     }
 
-    loadData().catch(err => {
-      document.getElementById('loading').textContent = 'Error loading data: ' + err.message;
-      console.error(err);
+    // ---- Event wiring ----
+    document.querySelectorAll('.venue-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchVenue(tab.dataset.venue));
     });
+
+    loadData();
   </script>
 </body>
 </html>

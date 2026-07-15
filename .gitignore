@@ -19,3 +19,7 @@ all-grid-annotated.png
 unique_seats_viz.png
 classified_seats_overlay.png
 seat-maps-annotated/
+debug-sm-*.html
+probe-*.html
+probe-*.png
+probe-*.json
