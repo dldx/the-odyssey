@@ -1,0 +1,1038 @@
+[
+  {
+    "page": 1,
+    "start": "Friday 17 July 2026 00:01",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 1,
+    "start": "Friday 17 July 2026 04:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 1,
+    "start": "Friday 17 July 2026 08:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-17_08-00.png"
+  },
+  {
+    "page": 1,
+    "start": "Friday 17 July 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 1,
+    "start": "Friday 17 July 2026 16:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 2,
+    "start": "Friday 17 July 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 2,
+    "start": "Saturday 18 July 2026 00:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 2,
+    "start": "Saturday 18 July 2026 04:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 2,
+    "start": "Saturday 18 July 2026 08:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 2,
+    "start": "Saturday 18 July 2026 12:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 3,
+    "start": "Saturday 18 July 2026 16:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 3,
+    "start": "Saturday 18 July 2026 20:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 3,
+    "start": "Sunday 19 July 2026 00:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 3,
+    "start": "Sunday 19 July 2026 04:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 3,
+    "start": "Sunday 19 July 2026 08:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 4,
+    "start": "Sunday 19 July 2026 12:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 4,
+    "start": "Sunday 19 July 2026 16:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 4,
+    "start": "Sunday 19 July 2026 20:20",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 4,
+    "start": "Monday 20 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 4,
+    "start": "Monday 20 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 5,
+    "start": "Monday 20 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 5,
+    "start": "Monday 20 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 5,
+    "start": "Tuesday 21 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 5,
+    "start": "Tuesday 21 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 5,
+    "start": "Tuesday 21 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 6,
+    "start": "Tuesday 21 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 6,
+    "start": "Wednesday 22 July 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 6,
+    "start": "Wednesday 22 July 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 6,
+    "start": "Wednesday 22 July 2026 17:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 6,
+    "start": "Wednesday 22 July 2026 21:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 7,
+    "start": "Thursday 23 July 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 7,
+    "start": "Thursday 23 July 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 7,
+    "start": "Thursday 23 July 2026 17:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 7,
+    "start": "Thursday 23 July 2026 21:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 7,
+    "start": "Friday 24 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 8,
+    "start": "Friday 24 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 8,
+    "start": "Friday 24 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 8,
+    "start": "Friday 24 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 8,
+    "start": "Saturday 25 July 2026 00:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 8,
+    "start": "Saturday 25 July 2026 11:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 9,
+    "start": "Saturday 25 July 2026 15:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 9,
+    "start": "Saturday 25 July 2026 19:15",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 9,
+    "start": "Saturday 25 July 2026 23:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-25_23-15.png"
+  },
+  {
+    "page": 9,
+    "start": "Sunday 26 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 9,
+    "start": "Sunday 26 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 10,
+    "start": "Sunday 26 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 10,
+    "start": "Sunday 26 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 10,
+    "start": "Monday 27 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 10,
+    "start": "Monday 27 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 10,
+    "start": "Monday 27 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 11,
+    "start": "Monday 27 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 11,
+    "start": "Tuesday 28 July 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-28_08-30.png"
+  },
+  {
+    "page": 11,
+    "start": "Tuesday 28 July 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 11,
+    "start": "Tuesday 28 July 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 11,
+    "start": "Tuesday 28 July 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 12,
+    "start": "Wednesday 29 July 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-29_09-00.png"
+  },
+  {
+    "page": 12,
+    "start": "Wednesday 29 July 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 12,
+    "start": "Wednesday 29 July 2026 17:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 12,
+    "start": "Wednesday 29 July 2026 21:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 12,
+    "start": "Thursday 30 July 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-30_09-00.png"
+  },
+  {
+    "page": 13,
+    "start": "Thursday 30 July 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-30_13-00.png"
+  },
+  {
+    "page": 13,
+    "start": "Thursday 30 July 2026 17:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 13,
+    "start": "Thursday 30 July 2026 21:00",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 13,
+    "start": "Friday 31 July 2026 11:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-31_11-15.png"
+  },
+  {
+    "page": 13,
+    "start": "Friday 31 July 2026 15:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-31_15-15.png"
+  },
+  {
+    "page": 14,
+    "start": "Friday 31 July 2026 19:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-31_19-15.png"
+  },
+  {
+    "page": 14,
+    "start": "Friday 31 July 2026 23:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-07-31_23-15.png"
+  },
+  {
+    "page": 14,
+    "start": "Saturday 01 August 2026 10:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-01_10-30.png"
+  },
+  {
+    "page": 14,
+    "start": "Saturday 01 August 2026 14:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 14,
+    "start": "Saturday 01 August 2026 18:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-01_18-30.png"
+  },
+  {
+    "page": 15,
+    "start": "Saturday 01 August 2026 22:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 15,
+    "start": "Sunday 02 August 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 15,
+    "start": "Sunday 02 August 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 15,
+    "start": "Sunday 02 August 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 15,
+    "start": "Sunday 02 August 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 16,
+    "start": "Monday 03 August 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-03_08-30.png"
+  },
+  {
+    "page": 16,
+    "start": "Monday 03 August 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-03_12-30.png"
+  },
+  {
+    "page": 16,
+    "start": "Monday 03 August 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-03_16-30.png"
+  },
+  {
+    "page": 16,
+    "start": "Monday 03 August 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-03_20-30.png"
+  },
+  {
+    "page": 16,
+    "start": "Tuesday 04 August 2026 08:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-04_08-30.png"
+  },
+  {
+    "page": 17,
+    "start": "Tuesday 04 August 2026 12:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-04_12-30.png"
+  },
+  {
+    "page": 17,
+    "start": "Tuesday 04 August 2026 16:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-04_16-30.png"
+  },
+  {
+    "page": 17,
+    "start": "Tuesday 04 August 2026 20:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-04_20-30.png"
+  },
+  {
+    "page": 17,
+    "start": "Wednesday 05 August 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-05_09-00.png"
+  },
+  {
+    "page": 17,
+    "start": "Wednesday 05 August 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-05_13-00.png"
+  },
+  {
+    "page": 18,
+    "start": "Wednesday 05 August 2026 20:45",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-05_20-45.png"
+  },
+  {
+    "page": 18,
+    "start": "Thursday 06 August 2026 09:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-06_09-00.png"
+  },
+  {
+    "page": 18,
+    "start": "Thursday 06 August 2026 13:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-06_13-00.png"
+  },
+  {
+    "page": 18,
+    "start": "Thursday 06 August 2026 17:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-06_17-00.png"
+  },
+  {
+    "page": 18,
+    "start": "Thursday 06 August 2026 21:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-06_21-00.png"
+  },
+  {
+    "page": 19,
+    "start": "Friday 07 August 2026 10:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-07_10-30.png"
+  },
+  {
+    "page": 19,
+    "start": "Friday 07 August 2026 14:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-07_14-30.png"
+  },
+  {
+    "page": 19,
+    "start": "Friday 07 August 2026 18:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 19,
+    "start": "Friday 07 August 2026 22:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-07_22-30.png"
+  },
+  {
+    "page": 19,
+    "start": "Saturday 08 August 2026 10:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-08_10-30.png"
+  },
+  {
+    "page": 20,
+    "start": "Saturday 08 August 2026 14:30",
+    "venue": "BFI IMAX",
+    "sold_out": true,
+    "screenshot": null
+  },
+  {
+    "page": 20,
+    "start": "Saturday 08 August 2026 18:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-08_18-30.png"
+  },
+  {
+    "page": 20,
+    "start": "Saturday 08 August 2026 22:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-08_22-30.png"
+  },
+  {
+    "page": 20,
+    "start": "Sunday 09 August 2026 11:45",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-09_11-45.png"
+  },
+  {
+    "page": 20,
+    "start": "Sunday 09 August 2026 15:45",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-09_15-45.png"
+  },
+  {
+    "page": 21,
+    "start": "Sunday 09 August 2026 19:45",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-09_19-45.png"
+  },
+  {
+    "page": 21,
+    "start": "Monday 10 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-10_12-00.png"
+  },
+  {
+    "page": 21,
+    "start": "Monday 10 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-10_16-00.png"
+  },
+  {
+    "page": 21,
+    "start": "Tuesday 11 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-11_12-00.png"
+  },
+  {
+    "page": 21,
+    "start": "Tuesday 11 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-11_16-00.png"
+  },
+  {
+    "page": 22,
+    "start": "Tuesday 11 August 2026 20:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-11_20-00.png"
+  },
+  {
+    "page": 22,
+    "start": "Wednesday 12 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-12_12-00.png"
+  },
+  {
+    "page": 22,
+    "start": "Wednesday 12 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-12_16-00.png"
+  },
+  {
+    "page": 22,
+    "start": "Wednesday 12 August 2026 20:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-12_20-00.png"
+  },
+  {
+    "page": 22,
+    "start": "Thursday 13 August 2026 12:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-13_12-15.png"
+  },
+  {
+    "page": 23,
+    "start": "Thursday 13 August 2026 16:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-13_16-15.png"
+  },
+  {
+    "page": 23,
+    "start": "Thursday 13 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-13_20-15.png"
+  },
+  {
+    "page": 23,
+    "start": "Friday 14 August 2026 10:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-14_10-30.png"
+  },
+  {
+    "page": 23,
+    "start": "Friday 14 August 2026 14:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-14_14-30.png"
+  },
+  {
+    "page": 23,
+    "start": "Friday 14 August 2026 18:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-14_18-30.png"
+  },
+  {
+    "page": 24,
+    "start": "Friday 14 August 2026 22:30",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-14_22-30.png"
+  },
+  {
+    "page": 24,
+    "start": "Saturday 15 August 2026 13:20",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-15_13-20.png"
+  },
+  {
+    "page": 24,
+    "start": "Saturday 15 August 2026 17:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-15_17-15.png"
+  },
+  {
+    "page": 24,
+    "start": "Saturday 15 August 2026 21:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-15_21-15.png"
+  },
+  {
+    "page": 24,
+    "start": "Sunday 16 August 2026 10:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-16_10-00.png"
+  },
+  {
+    "page": 25,
+    "start": "Sunday 16 August 2026 16:20",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-16_16-20.png"
+  },
+  {
+    "page": 25,
+    "start": "Sunday 16 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-16_20-15.png"
+  },
+  {
+    "page": 25,
+    "start": "Monday 17 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-17_12-00.png"
+  },
+  {
+    "page": 25,
+    "start": "Monday 17 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-17_16-00.png"
+  },
+  {
+    "page": 25,
+    "start": "Monday 17 August 2026 20:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-17_20-00.png"
+  },
+  {
+    "page": 26,
+    "start": "Tuesday 18 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-18_12-00.png"
+  },
+  {
+    "page": 26,
+    "start": "Tuesday 18 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-18_16-00.png"
+  },
+  {
+    "page": 26,
+    "start": "Tuesday 18 August 2026 20:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-18_20-00.png"
+  },
+  {
+    "page": 26,
+    "start": "Wednesday 19 August 2026 12:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-19_12-00.png"
+  },
+  {
+    "page": 26,
+    "start": "Wednesday 19 August 2026 16:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-19_16-00.png"
+  },
+  {
+    "page": 27,
+    "start": "Wednesday 19 August 2026 20:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-19_20-00.png"
+  },
+  {
+    "page": 27,
+    "start": "Thursday 20 August 2026 12:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-20_12-15.png"
+  },
+  {
+    "page": 27,
+    "start": "Thursday 20 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-20_20-15.png"
+  },
+  {
+    "page": 27,
+    "start": "Friday 21 August 2026 11:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-21_11-15.png"
+  },
+  {
+    "page": 27,
+    "start": "Friday 21 August 2026 15:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-21_15-15.png"
+  },
+  {
+    "page": 28,
+    "start": "Friday 21 August 2026 19:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-21_19-15.png"
+  },
+  {
+    "page": 28,
+    "start": "Saturday 22 August 2026 10:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-22_10-00.png"
+  },
+  {
+    "page": 28,
+    "start": "Saturday 22 August 2026 16:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-22_16-15.png"
+  },
+  {
+    "page": 28,
+    "start": "Saturday 22 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-22_20-15.png"
+  },
+  {
+    "page": 28,
+    "start": "Sunday 23 August 2026 12:20",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-23_12-20.png"
+  },
+  {
+    "page": 29,
+    "start": "Sunday 23 August 2026 16:20",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-23_16-20.png"
+  },
+  {
+    "page": 29,
+    "start": "Sunday 23 August 2026 20:20",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-23_20-20.png"
+  },
+  {
+    "page": 29,
+    "start": "Monday 24 August 2026 10:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-24_10-00.png"
+  },
+  {
+    "page": 29,
+    "start": "Monday 24 August 2026 14:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-24_14-00.png"
+  },
+  {
+    "page": 29,
+    "start": "Monday 24 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-24_20-15.png"
+  },
+  {
+    "page": 30,
+    "start": "Tuesday 25 August 2026 10:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-25_10-00.png"
+  },
+  {
+    "page": 30,
+    "start": "Tuesday 25 August 2026 14:00",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-25_14-00.png"
+  },
+  {
+    "page": 30,
+    "start": "Tuesday 25 August 2026 20:15",
+    "venue": "BFI IMAX",
+    "sold_out": false,
+    "screenshot": "2026-08-25_20-15.png"
+  }
+]

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFI IMAX - The Odyssey Seat Finder</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.yellow.min.css">
+  <style>
+    body { padding-bottom: 2rem; }
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1rem; }
+    .screening-card { break-inside: avoid; }
+    .screening-card.sold-out { opacity: 0.5; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .badge.available { background: #2e7d32; color: white; }
+    .badge.sold-out { background: #c62828; color: white; }
+    .seat-map { max-width: 100%; height: auto; border-radius: 4px; border: 1px solid #ccc; }
+    .row-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+    .chip { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; background: var(--pico-secondary-background); color: var(--pico-color); }
+    .chip.center { background: #fff3cd; }
+    .chip.left { background: #d1ecf1; }
+    .chip.right { background: #f8d7da; }
+    #results-info { margin: 1rem 0; font-weight: bold; }
+    summary { cursor: pointer; }
+    .filter-bar { position: sticky; top: 0; z-index: 100; background: var(--pico-card-background-color, #fff); padding: 1rem; border-bottom: 1px solid var(--pico-muted-border-color, #ccc); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .filter-bar .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; align-items: end; }
+    .range-container { position: relative; width: 100%; height: 2rem; display: flex; align-items: center; }
+    .range-container input[type=range] { pointer-events: none; position: absolute; width: 100%; margin: 0; background: none; top: 50%; transform: translateY(-50%); }
+    .range-container input[type=range]::-webkit-slider-thumb { pointer-events: auto; }
+    .range-container input[type=range]::-moz-range-thumb { pointer-events: auto; }
+    .seat-list { font-size: 0.75rem; max-height: 120px; overflow-y: auto; }
+    .seat-list table { width: 100%; }
+    .seat-list th, .seat-list td { padding: 2px 6px; text-align: left; }
+    .loading { text-align: center; padding: 3rem; font-size: 1.2rem; }
+    .stats { display: flex; gap: 2rem; margin: 1rem 0; }
+    .stat { text-align: center; }
+    .stat .num { font-size: 2rem; font-weight: bold; }
+    .stat .label { font-size: 0.8rem; color: var(--pico-muted-color); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>BFI IMAX &mdash; The Odyssey (70mm IMAX)</h1>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="filter-bar">
+      <div class="grid">
+        <div>
+          <label for="filter-date">Date</label>
+          <select id="filter-date" style="margin:0;"><option value="">All dates</option></select>
+        </div>
+        <div>
+          <label for="filter-time-min">Time of day
+            <small id="time-range-label">00:00 – 23:59</small>
+          </label>
+          <div class="range-container">
+            <input type="range" id="filter-time-min" min="0" max="23" value="0">
+            <input type="range" id="filter-time-max" min="0" max="23" value="23">
+          </div>
+        </div>
+        <div>
+          <label for="filter-availability">Availability</label>
+          <select id="filter-availability" style="margin:0;">
+            <option value="">All</option>
+            <option value="available" selected>Available only</option>
+            <option value="soldout">Sold out only</option>
+          </select>
+        </div>
+        <div>
+          <label for="filter-block">Block</label>
+          <select id="filter-block" style="margin:0;">
+            <option value="">Any block</option>
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 1rem; align-items: end;">
+        <div>
+          <label for="filter-row-min">Row
+            <small id="row-range-label">A – Q</small>
+          </label>
+          <div class="range-container">
+            <input type="range" id="filter-row-min" min="0" max="14" value="0">
+            <input type="range" id="filter-row-max" min="0" max="14" value="14">
+          </div>
+        </div>
+        <div>
+          <label for="filter-min-seats">Min seats (matching row/block)</label>
+          <input type="number" id="filter-min-seats" min="0" value="0" style="width:100%; margin:0;">
+        </div>
+        <div style="display:flex; align-items:center; height: 100%;">
+          <label style="margin:0;"><input type="checkbox" id="filter-screenshot" style="margin-bottom:0; margin-right:0.5rem;"> Has seat map</label>
+        </div>
+        <div style="display:flex; align-items:center; height: 100%;">
+          <button id="reset-filters" class="outline" style="white-space:nowrap; margin:0; width:100%;">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <p id="results-info"></p>
+    <div id="loading" class="loading">Loading screening data...</div>
+    <div id="cards" class="grid-cards" style="display:none;"></div>
+  </main>
+
+  <script>
+    let allScreenings = [];
+    let analyzedScreenings = {};
+    let filtered = [];
+
+    const ROWS = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q'];
+
+    // Parse "Thursday 30 July 2026 13:00" -> {date, time, datetime, hour}
+    function parseStart(startStr) {
+      // e.g. "Friday 17 July 2026 00:01"
+      const match = startStr.match(/^(\w+)\s+(\d+)\s+(\w+)\s+(\d+)\s+(\d{2}):(\d{2})$/);
+      if (!match) return null;
+      const [, dow, day, monthName, year, hh, mm] = match;
+      const months = {January:'01',February:'02',March:'03',April:'04',May:'05',June:'06',July:'07',August:'08',September:'09',October:'10',November:'11',December:'12'};
+      const month = months[monthName] || '01';
+      const dateStr = `${year}-${month}-${day.padStart(2,'0')}`;
+      const timeStr = `${hh}:${mm}`;
+      return {
+        date: dateStr,
+        time: timeStr,
+        hour: parseInt(hh),
+        datetime: `${dateStr} ${timeStr}`,
+        sortKey: `${dateStr}T${timeStr}`,
+      };
+    }
+
+    function timeCategory(hour) {
+      if (hour < 12) return 'morning';
+      if (hour < 17) return 'afternoon';
+      if (hour < 22) return 'evening';
+      return 'late';
+    }
+
+    function fmtDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    function fmtTime(timeStr) {
+      return timeStr;
+    }
+
+    async function loadData() {
+      const [screeningsRes, analyzedRes] = await Promise.all([
+        fetch('all-screenings.json'),
+        fetch('analyzed-seats.json'),
+      ]);
+      allScreenings = await screeningsRes.json();
+      const analyzedData = await analyzedRes.json();
+      analyzedScreenings = analyzedData.screenings || {};
+
+      // Merge parsed dates
+      allScreenings.forEach(s => {
+        s.parsed = parseStart(s.start);
+        // Match with analyzed screening by screenshot filename
+        if (s.screenshot) {
+          const key = s.screenshot.replace('.png', '');
+          s.analyzed = analyzedScreenings[key] || null;
+        } else {
+          s.analyzed = null;
+        }
+      });
+
+      // Sort by datetime
+      allScreenings.sort((a, b) => (a.parsed?.sortKey || '').localeCompare(b.parsed?.sortKey || ''));
+
+      initFilters();
+      applyFilters();
+    }
+
+    function initFilters() {
+      const dateSelect = document.getElementById('filter-date');
+      const dates = [...new Set(allScreenings.map(s => s.parsed?.date).filter(Boolean))].sort();
+      dates.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = fmtDate(d);
+        dateSelect.appendChild(opt);
+      });
+
+      ['filter-date','filter-availability','filter-block','filter-min-seats','filter-screenshot'].forEach(id => {
+        document.getElementById(id).addEventListener('change', applyFilters);
+        document.getElementById(id).addEventListener('input', applyFilters);
+      });
+
+      ['filter-time-min','filter-time-max'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => { updateTimeRangeLabel(); applyFilters(); });
+      });
+
+      ['filter-row-min','filter-row-max'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => { updateRowRangeLabel(); applyFilters(); });
+      });
+
+      document.getElementById('reset-filters').addEventListener('click', () => {
+        document.getElementById('filter-date').value = '';
+        document.getElementById('filter-availability').value = 'available';
+        document.getElementById('filter-block').value = '';
+        document.getElementById('filter-min-seats').value = 0;
+        document.getElementById('filter-screenshot').checked = false;
+        document.getElementById('filter-time-min').value = 0;
+        document.getElementById('filter-time-max').value = 23;
+        updateTimeRangeLabel();
+        document.getElementById('filter-row-min').value = 0;
+        document.getElementById('filter-row-max').value = 14;
+        updateRowRangeLabel();
+        applyFilters();
+      });
+    }
+
+    function updateTimeRangeLabel() {
+      const min = parseInt(document.getElementById('filter-time-min').value);
+      const max = parseInt(document.getElementById('filter-time-max').value);
+      document.getElementById('time-range-label').textContent =
+        `${String(min).padStart(2,'0')}:00 – ${String(max).padStart(2,'0')}:59`;
+    }
+
+    function updateRowRangeLabel() {
+      const min = parseInt(document.getElementById('filter-row-min').value);
+      const max = parseInt(document.getElementById('filter-row-max').value);
+      document.getElementById('row-range-label').textContent =
+        `${ROWS[min]} – ${ROWS[max]}`;
+    }
+
+    function rowInScope(row) {
+      const min = parseInt(document.getElementById('filter-row-min').value);
+      const max = parseInt(document.getElementById('filter-row-max').value);
+      const idx = ROWS.indexOf(row);
+      return idx >= min && idx <= max;
+    }
+
+    function applyFilters() {
+      const fDate = document.getElementById('filter-date').value;
+      const fTimeMin = parseInt(document.getElementById('filter-time-min').value);
+      const fTimeMax = parseInt(document.getElementById('filter-time-max').value);
+      const fAvail = document.getElementById('filter-availability').value;
+      const fBlock = document.getElementById('filter-block').value;
+      const fRowMin = parseInt(document.getElementById('filter-row-min').value);
+      const fRowMax = parseInt(document.getElementById('filter-row-max').value);
+      const rowRangeActive = fRowMin > 0 || fRowMax < 14;
+      const fMinSeats = parseInt(document.getElementById('filter-min-seats').value) || 0;
+      const fScreenshot = document.getElementById('filter-screenshot').checked;
+
+      filtered = allScreenings.filter(s => {
+        if (!s.parsed) return false;
+        if (fDate && s.parsed.date !== fDate) return false;
+        if (s.parsed.hour < fTimeMin || s.parsed.hour > fTimeMax) return false;
+        if (fAvail === 'available' && s.sold_out) return false;
+        if (fAvail === 'soldout' && !s.sold_out) return false;
+        if (fScreenshot && !s.screenshot) return false;
+
+        const analyzed = s.analyzed;
+        const totalAvailable = analyzed?.total_available || 0;
+
+        // Count seats in scope (matching row range + block)
+        let countInScope = totalAvailable;
+        if (rowRangeActive || fBlock) {
+          countInScope = 0;
+          if (analyzed?.by_row) {
+            for (const [row, info] of Object.entries(analyzed.by_row)) {
+              if (rowRangeActive && !rowInScope(row)) continue;
+              if (fBlock && !info.blocks.includes(fBlock)) continue;
+              countInScope += info.count;
+            }
+          }
+        }
+
+        if (fMinSeats > 0 && countInScope < fMinSeats) return false;
+
+        // Must have at least one seat in the row range
+        if (rowRangeActive) {
+          if (countInScope === 0) return false;
+        }
+
+        // Must have at least one seat in the selected block
+        if (fBlock && !rowRangeActive) {
+          const hasBlock = analyzed?.by_row && Object.values(analyzed.by_row).some(r => r.blocks.includes(fBlock));
+          if (!hasBlock) return false;
+        }
+
+        return true;
+      });
+
+      renderStats();
+      renderCards();
+    }
+
+    function renderStats() {
+      const total = filtered.length;
+      const available = filtered.filter(s => !s.sold_out).length;
+      const soldOut = filtered.filter(s => s.sold_out).length;
+      const totalSeats = filtered.reduce((sum, s) => sum + (s.analyzed?.total_available || 0), 0);
+
+      document.getElementById('stats').innerHTML = `
+        <div class="stat"><div class="num">${total}</div><div class="label">Screenings</div></div>
+        <div class="stat"><div class="num" style="color:#2e7d32">${available}</div><div class="label">Available</div></div>
+        <div class="stat"><div class="num" style="color:#c62828">${soldOut}</div><div class="label">Sold Out</div></div>
+        <div class="stat"><div class="num">${totalSeats}</div><div class="label">Total Seats</div></div>
+      `;
+
+      document.getElementById('results-info').textContent = `Showing ${total} of ${allScreenings.length} screenings`;
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cards');
+      document.getElementById('loading').style.display = 'none';
+      container.style.display = 'grid';
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p>No screenings match the current filters.</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => {
+        const p = s.parsed;
+        const analyzed = s.analyzed;
+        const isSoldOut = s.sold_out;
+        const totalSeats = analyzed?.total_available || 0;
+
+        // Row chips
+        let rowChips = '';
+        if (analyzed?.by_row) {
+          const rows = Object.entries(analyzed.by_row)
+            .filter(([r, info]) => info.count > 0)
+            .sort((a, b) => a[0].localeCompare(b[0]));
+          rowChips = rows.map(([r, info]) => {
+            const blocks = info.blocks.map(b => `<span class="chip ${b}">${b[0].toUpperCase()}</span>`).join('');
+            return `<span class="chip">${r}: ${info.count}</span>${blocks}`;
+          }).join(' ');
+        }
+
+        // Seat detail table (collapsible)
+        let seatDetail = '';
+        if (analyzed?.by_row) {
+          const rows = Object.entries(analyzed.by_row)
+            .filter(([r, info]) => info.count > 0)
+            .sort((a, b) => a[0].localeCompare(b[0]));
+          const tableBody = rows.map(([r, info]) => {
+            return info.seats.map(seat =>
+              `<tr><td>${r}</td><td>${seat.block}</td><td>${seat.x}</td><td>${seat.y}</td></tr>`
+            ).join('');
+          }).join('');
+          if (tableBody) {
+            seatDetail = `
+              <details>
+                <summary>Seat positions (${totalSeats})</summary>
+                <div class="seat-list">
+                  <table>
+                    <thead><tr><th>Row</th><th>Block</th><th>X</th><th>Y</th></tr></thead>
+                    <tbody>${tableBody}</tbody>
+                  </table>
+                </div>
+              </details>`;
+          }
+        }
+
+        const imgHtml = s.screenshot
+          ? `<img class="seat-map" src="seat-maps/${s.screenshot}" alt="Seat map for ${p.datetime}" loading="lazy">`
+          : '<p><em>No seat map available</em></p>';
+
+        return `
+          <article class="screening-card ${isSoldOut ? 'sold-out' : ''}">
+            <header>
+              <strong>${fmtDate(p.date)}</strong>
+              &nbsp;${fmtTime(p.time)}
+              ${isSoldOut
+                ? '<span class="badge sold-out">Sold Out</span>'
+                : '<span class="badge available">Available</span>'}
+            </header>
+            ${!isSoldOut && totalSeats > 0 ? `<p><strong>${totalSeats}</strong> seats available</p>` : ''}
+            ${rowChips ? `<div class="row-chips">${rowChips}</div>` : ''}
+            ${imgHtml}
+            ${seatDetail}
+          </article>`;
+      }).join('');
+    }
+
+    loadData().catch(err => {
+      document.getElementById('loading').textContent = 'Error loading data: ' + err.message;
+      console.error(err);
+    });
+  </script>
+</body>
+</html>
